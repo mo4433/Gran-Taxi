@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver</title>
+    <!-- Bibliotek -->
+    <script src="http://10.161.64.19:30009/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        .booking-card { border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 8px; font-family: sans-serif; }
+        .btn-accept { background: green; color: white; padding: 5px 10px; border: none; cursor: pointer; border-radius: 4px; }
+        .new-booking { background-color: #e1f5fe; border: 2px solid #03a9f4; }
+        #map { height: 300px; margin: 10px; border-radius: 8px; border: 2px solid #333; }
+    </style>
+</head>
+<body>
+
+    <h1>Förarens vy</h1>
+    
+    <!-- KARTAN SKA VARA I BODY -->
+    <div id="map"></div>
+
+    <h1>Inkomna bokningar</h1>
+    <div id="booking-list">Laddar bokningar...</div>
+
+    <script>
+
+        
+     if ('serviceWorker' in navigator) {
+         navigator.serviceWorker.register('/sw.js');
+           }
+
+        // 1. Starta Socket först
+        const socket = io('http://10.161.64.19:30009');
+        const listDiv = document.getElementById('booking-list');
+
+        // 2. Definiera ikonen (nu när Leaflet är laddat)
+        const taxiIcon = L.icon({
+            iconUrl: 'bil.png',
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
+            popupAnchor: [0, -20]
+        });
+
+        // 3. Starta kartan
+        const map = L.map('map').setView([59.3293, 18.0686], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        // Skapa markören med din bil-bild
+        let myMarker = L.marker([59.3293, 18.0686], { icon: taxiIcon }).addTo(map);
+
+        // 4. GPS-hantering
+        navigator.geolocation.watchPosition(pos => {
+            const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            myMarker.setLatLng([coords.lat, coords.lng]);
+            map.setView([coords.lat, coords.lng]);
+            
+            // Skicka positionen till servern
+            socket.emit('driver_pos', coords);
+        }, err => console.error(err), { enableHighAccuracy: true });
+
+        // 5. Bokningsfunktioner
+        function skapaBokningsKort(data, isNew = false) {
+            const card = document.createElement('div');
+            card.className = isNew ? 'booking-card new-booking' : 'booking-card';
+            card.innerHTML = `
+                <p><strong>${isNew ? 'NY! ' : ''}Från:</strong> ${data.start}</p>
+                <p><strong>Till:</strong> ${data.destination}</p>
+                <button class="btn-accept" onclick="acceptera('${data._id}')">Acceptera nu!</button>
+            `;
+            return card;
+        }
+
+        async function laddaGamlaBokningar() {
+            try {
+                const response = await fetch('http://10.161.64.19:30009/alla-bokningar');
+                const bokningar = await response.json();
+                listDiv.innerHTML = bokningar.length === 0 ? '<p>Inga bokningar.</p>' : '';
+                bokningar.forEach(b => listDiv.appendChild(skapaBokningsKort(b)));
+            } catch (err) {
+                listDiv.innerHTML = 'Fel vid hämtning.';
+            }
+        }
+
+        socket.on('ny_bokning', (data) => {
+            if (listDiv.innerText.includes("Inga") || listDiv.innerText.includes("Laddar")) listDiv.innerHTML = '';
+            listDiv.prepend(skapaBokningsKort(data, true));
+        });
+
+        function acceptera(id) {
+            alert("Accepterad: " + id);
+        }
+
+        laddaGamlaBokningar();
+    </script>
+</body>
+</html>

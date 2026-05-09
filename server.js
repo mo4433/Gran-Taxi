@@ -93,3 +93,12 @@ io.on('connection', (socket) => {
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server körs!http://10.161.64.19 ${PORT}`);
 });
+const path = require('path');
+
+// Gör så att servern förstår var dina filer (html, bilder, css) finns
+app.use(express.static(__dirname));
+
+// Skicka index.html när någon besöker hemsidan
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});

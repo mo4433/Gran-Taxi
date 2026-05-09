@@ -97,7 +97,7 @@ const path = require('path');
 
 // Startsidan (Bokning)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Boking.html'));
+    res.sendFile(path.join(__dirname, 'Bokning.html'));
 });
 
 // Förarsidan

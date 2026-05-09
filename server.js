@@ -95,10 +95,12 @@ server.listen(PORT, '0.0.0.0', () => {
 });
 const path = require('path');
 
-// Gör så att servern förstår var dina filer (html, bilder, css) finns
-app.use(express.static(__dirname));
-
-// Skicka index.html när någon besöker hemsidan
+// Startsidan (Bokning)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'Boking.html'));
+});
+
+// Förarsidan
+app.get('/driver', (req, res) => {
+    res.sendFile(path.join(__dirname, 'driver.html'));
 });

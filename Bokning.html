@@ -7,9 +7,8 @@
    
     <title>Gran Taxi</title>
 
-    
-    <!-- Bibliotek -->
-    <script src="http://10.161.64.19:30009/socket.io/socket.io.js"></script>
+    <!-- Bibliotek - Ändrad till relativ sökväg -->
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
@@ -22,7 +21,6 @@
         .booking-item { border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 5px; background: #fff; }
         .btn-cancel { background: #ff4444; color: white; padding: 5px 10px; font-size: 12px; width: auto; }
 
-        /* Autocomplete */
         .autocomplete-results {
             background: white; border: 1px solid #ccc; position: absolute;
             z-index: 1000; width: 95%; max-height: 200px; overflow-y: auto;
@@ -39,21 +37,20 @@
 
     <div class="booking-container">
         <h1>(Gran Taxi)</h1>
-        <h1>Du kan boka och betala senare i bilen med krdit kort eller swish</h1>
-        <h2>Gran Taxi samarbetar med krigs drabbade länder och organitaion som Stöd barn i
-         Gaze,Sodan, Lybia, Libenan, kvinnor stöd i Afghnistan, 5% av din betalning av resan går till detta organitaion.</h2>
+        <p>Du kan boka och betala senare i bilen med kreditkort eller Swish.</p>
+        <p style="font-size: 0.8em; color: #555;">Gran Taxi samarbetar med hjälporganisationer. 5% av resans pris går till stöd i drabbade områden.</p>
         
         <button id="gps-btn" onclick="hittaMig()">Hitta min position</button>
 
         <!-- START -->
         <div style="position: relative;">
-            <input type="text" id="start" placeholder="Varifrån? (Skriv eller klicka på karta)" autocomplete="off">
+            <input type="text" id="start" placeholder="Varifrån?" autocomplete="off">
             <div id="results-start" class="autocomplete-results"></div>
         </div>
 
         <!-- DESTINATION -->
         <div style="position: relative;">
-            <input type="text" id="destination" placeholder="Vart ska du? (Skriv eller klicka på karta)" autocomplete="off">
+            <input type="text" id="destination" placeholder="Vart ska du?" autocomplete="off">
             <div id="results-dest" class="autocomplete-results"></div>
         </div>
 
@@ -81,7 +78,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // --- KONFIGURATION ---
-        const socket = io('http://10.161.64.19:30009');
+        const socket = io(); // Ansluter automatiskt till Render-servern
         const TAXA_PER_KM = 15;
         const STARTAVGIFT = 45;
         
@@ -104,7 +101,6 @@
         });
 
         // --- FUNKTIONER ---
-
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -128,7 +124,6 @@
         map.on('click', function(e) {
             const lat = e.latlng.lat;
             const lng = e.latlng.lng;
-
             if (!startCoords) {
                 startCoords = { lat, lng };
                 if (userMarker) map.removeLayer(userMarker);
@@ -137,7 +132,7 @@
             } else {
                 destCoords = { lat, lng };
                 if (destMarker) map.removeLayer(destMarker);
-                destMarker = L.marker([lat, lng], {icon: L.divIcon({className: 'dest-marker', html: '📍'})}).addTo(map).bindPopup("Mål").openPopup();
+                destMarker = L.marker([lat, lng]).addTo(map).bindPopup("Mål").openPopup();
                 document.getElementById('destination').value = "Position vald på karta";
                 updatePrice();
             }
@@ -146,11 +141,9 @@
         function setupAutocomplete(inputId, resultsId, type) {
             const input = document.getElementById(inputId);
             const resDiv = document.getElementById(resultsId);
-
             input.addEventListener('input', async () => {
                 const query = input.value;
                 if (query.length < 3) { resDiv.style.display = 'none'; return; }
-
                 try {
                     const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`);
                     const data = await res.json();
@@ -224,7 +217,7 @@
             if(!payload.start || !payload.destination) return alert("Välj start och mål!");
 
             try {
-                const res = await fetch('http://10.161.64.19:30009/boka', {
+                const res = await fetch('/boka', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -232,7 +225,10 @@
                 const data = await res.json();
                 document.getElementById('status').innerText = "Bokning bekräftad!";
                 visaAktivBokning(data.bookingId, payload.start, payload.destination, payload.date, payload.time, payload.price);
-            } catch (err) { alert("Kunde inte boka."); }
+            } catch (err) { 
+                alert("Kunde inte boka."); 
+                console.error(err);
+            }
         }
 
         function visaAktivBokning(id, start, dest, date, time, price) {
@@ -251,7 +247,7 @@
         async function avboka(id) {
             if(!confirm("Vill du avboka?")) return;
             try {
-                const res = await fetch(`http://10.161.64.19:30009/avboka/${id}`, { method: 'DELETE' });
+                const res = await fetch(`/avboka/${id}`, { method: 'DELETE' });
                 if(res.ok) { document.getElementById(`booking-${id}`).remove(); }
             } catch (err) { alert("Kunde inte avboka."); }
         }

@@ -17,13 +17,18 @@ app.use(express.json());
 app.use(express.static(__dirname));
 app.use(express.static('public')); // Serverar filer från mappen "public"
 
-// Anslut till databasen
-mongoose.connect('mongodb://127.0.0.1:27017/taxiDB')
-    .then(() => console.log("Ansluten till databasen!"))
+
+
+
+   // Denna rad hämtar länken från Render automatiskt
+   const mongoURI = process.env.MONGO_URI;
+
+    mongoose.connect(mongoURI)
+    .then(() => console.log("Ansluten till MongoDB!"))
     .catch(err => console.error("Kunde inte ansluta:", err));
 
-// --- MODELL ---
-const Booking = mongoose.model('Booking', {
+  // --- MODELL ---
+  const Booking = mongoose.model('Booking', {
     start: String,
     destination: String,
     date: String,   // Lagt till för datum

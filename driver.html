@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Driver</title>
-    <!-- Bibliotek -->
-    <script src="http://10.161.64.19:30009/socket.io/socket.io.js"></script>
+    <!-- Bibliotek - Ändrad till relativ sökväg -->
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -18,24 +18,21 @@
 
     <h1>Förarens vy</h1>
     
-    <!-- KARTAN SKA VARA I BODY -->
     <div id="map"></div>
 
     <h1>Inkomna bokningar</h1>
     <div id="booking-list">Laddar bokningar...</div>
 
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
 
-        
-     if ('serviceWorker' in navigator) {
-         navigator.serviceWorker.register('/sw.js');
-           }
-
-        // 1. Starta Socket först
-        const socket = io('http://10.161.64.19:30009');
+        // 1. Starta Socket - Nu inställd för att hitta rätt server automatiskt
+        const socket = io(); 
         const listDiv = document.getElementById('booking-list');
 
-        // 2. Definiera ikonen (nu när Leaflet är laddat)
+        // 2. Definiera ikonen
         const taxiIcon = L.icon({
             iconUrl: 'bil.png',
             iconSize: [40, 40],
@@ -47,7 +44,6 @@
         const map = L.map('map').setView([59.3293, 18.0686], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         
-        // Skapa markören med din bil-bild
         let myMarker = L.marker([59.3293, 18.0686], { icon: taxiIcon }).addTo(map);
 
         // 4. GPS-hantering
@@ -56,7 +52,6 @@
             myMarker.setLatLng([coords.lat, coords.lng]);
             map.setView([coords.lat, coords.lng]);
             
-            // Skicka positionen till servern
             socket.emit('driver_pos', coords);
         }, err => console.error(err), { enableHighAccuracy: true });
 
@@ -72,14 +67,16 @@
             return card;
         }
 
+        // Ändrad fetch-URL till relativ sökväg
         async function laddaGamlaBokningar() {
             try {
-                const response = await fetch('http://10.161.64.19:30009/alla-bokningar');
+                const response = await fetch('/alla-bokningar');
                 const bokningar = await response.json();
                 listDiv.innerHTML = bokningar.length === 0 ? '<p>Inga bokningar.</p>' : '';
                 bokningar.forEach(b => listDiv.appendChild(skapaBokningsKort(b)));
             } catch (err) {
                 listDiv.innerHTML = 'Fel vid hämtning.';
+                console.error("Fetch error:", err);
             }
         }
 

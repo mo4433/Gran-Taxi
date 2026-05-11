@@ -5,11 +5,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
    
-    <title>Gran Taxi</title>
+    <title>SV-Taxi</title>
 
     <!-- Bibliotek - Ändrad till relativ sökväg -->
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <style>
         body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
@@ -36,9 +37,10 @@
 <body>
 
     <div class="booking-container">
-        <h1>(Gran Taxi)</h1>
+        <h1>(SV-Taxi)</h1>
         <p>Du kan boka och betala senare i bilen med kreditkort eller Swish.</p>
-        <p style="font-size: 0.8em; color: #555;">Gran Taxi samarbetar med hjälporganisationer. 5% av resans pris går till stöd i drabbade områden.</p>
+        <p style="font-size: 0.8em; color: #555;">SV-Taxi samarbetar med hjälporganisationer. 5% av resans pris går till stöd i drabbade länder.
+            .</p>
         
         <button id="gps-btn" onclick="hittaMig()">Hitta min position</button>
 

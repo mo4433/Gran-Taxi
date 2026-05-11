@@ -21,8 +21,52 @@
         .btn-accept { background: green; color: white; padding: 5px 10px; border: none; cursor: pointer; border-radius: 4px; }
         .new-booking { background-color: #e1f5fe; border: 2px solid #03a9f4; }
         #map { height: 300px; margin: 10px; border-radius: 8px; border: 2px solid #333; }
+
     </style>
-    
+
+
+<style>
+    /* Gör att allt tar upp hela skärmen snyggt */
+    body {
+        margin: 0;
+        padding: 15px;
+        background-color: #f8f9fa; /* Ljusgrå bakgrund som appar ofta har */
+        -webkit-tap-highlight-color: transparent; /* Tar bort blå blixt när man trycker */
+    }
+
+    /* Stora, runda knappar som är lätta att trycka på */
+    button {
+        height: 55px; /* Perfekt höjd för tummen */
+        font-size: 18px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.1s;
+    }
+
+    button:active {
+        transform: scale(0.97); /* Ger fysisk feedback när man trycker */
+    }
+
+    /* Input-fält som ser ut som i iOS/Android */
+    input {
+        height: 50px;
+        font-size: 16px; /* Förhindrar automatisk zoom på iPhone */
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    /* "Korten" för bokningar */
+    .booking-card {
+        background: white;
+        border: none;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border-radius: 15px;
+        padding: 20px;
+    }
+</style>
+
 </head>
 <body>
 

@@ -87,12 +87,25 @@ app.delete('/avboka/:id', async (req, res) => {
 });
 
 // --- SOCKET.IO (Karta/Position) ---
+
+// --- SOCKET.IO (Karta/Position/Chatt) ---
 io.on('connection', (socket) => {
+    console.log('En användare anslöt:', socket.id);
+
+    // 1. Hantera position
     socket.on('driver_pos', (coords) => {
-        // Skicka förarens position vidare till alla (bokaren)
         io.emit('update_map', coords);
-    });
-});
+    }); // <--- Denna stänger driver_pos korrekt
+
+    // 2. Hantera chatt
+    socket.on('chat_message', (data) => {
+        console.log('Nytt meddelande:', data);
+        io.emit('chat_message', data); 
+    }); // <--- Denna stänger chat_message korrekt
+
+}); // <--- Denna stänger hela io.on('connection')
+
+
 
 // STARTA SERVERN - Lyssnar på alla nätverkskort (0.0.0.0)
 server.listen(PORT, '0.0.0.0', () => {
@@ -110,8 +123,3 @@ app.get('/driver', (req, res) => {
     res.sendFile(path.join(__dirname, 'driver.html'));
 });
 
-// Inuti io.on('connection', (socket) => { ... })
-socket.on('chat_message', (data) => {
-    // data innehåller t.ex. { user: 'Förare', text: 'Jag är här om 5 min' }
-    io.emit('chat_message', data); // Skickar till ALLA
-});

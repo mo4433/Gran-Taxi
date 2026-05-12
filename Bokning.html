@@ -285,5 +285,36 @@
             } catch (err) { alert("Kunde inte avboka."); }
         }
     </script>
+
+    <script>
+    //const socket = io(); // Denna rad måste finnas först!
+
+    // --- HÄR KLISTRAR DU IN CHATT-KODEN ---
+    const chatInput = document.getElementById('chat-input');
+    const messagesDiv = document.getElementById('messages');
+
+    function sendMessage() {
+        const text = chatInput.value;
+        if (text) {
+            socket.emit('chat_message', { 
+                sender: "Förare", // Ändra till "Kund" i index.html
+                text: text 
+            });
+            chatInput.value = '';
+        }
+    }
+
+    socket.on('chat_message', (data) => {
+        const msgElement = document.createElement('p');
+        msgElement.innerHTML = `<strong>${data.sender}:</strong> ${data.text}`;
+        messagesDiv.appendChild(msgElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+    // --- SLUT PÅ CHATT-KOD ---
+
+    // Här fortsätter din gamla kod för karta/position...
+</script>
+
+
 </body>
 </html>

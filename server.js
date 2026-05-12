@@ -109,3 +109,9 @@ app.get('/', (req, res) => {
 app.get('/driver', (req, res) => {
     res.sendFile(path.join(__dirname, 'driver.html'));
 });
+
+// Inuti io.on('connection', (socket) => { ... })
+socket.on('chat_message', (data) => {
+    // data innehåller t.ex. { user: 'Förare', text: 'Jag är här om 5 min' }
+    io.emit('chat_message', data); // Skickar till ALLA
+});

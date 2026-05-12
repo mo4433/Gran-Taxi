@@ -75,16 +75,16 @@
 
     /* 5. Gör chatt-boxen kompakt och begränsa höjden */
     #chat-container {
-        background: white;
-        padding: 8px;
-        border-radius: 8px;
-        margin-top: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background: rgb(255, 255, 255);
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 20px;
+        box-shadow: 0 2px 8px rgba(87, 3, 3, 0.1);
     }
 
     /* VIKTIGT: Detta begränsar höjden på meddelandena och gör att det scrollar INUTI boxen */
     #messages {
-        height: 100px; /* Sätt en låg, fast höjd (t.ex. 100px) */
+        height: 20px; /* Sätt en låg, fast höjd (t.ex. 100px) */
         overflow-y: scroll; /* Gör att det går att scrolla inuti om det blir fullt */
         border-bottom: 1px solid #ddd;
         margin-bottom: 8px;
@@ -97,12 +97,12 @@
 
     /* 6. Gör chatt-input och sänd-knapp mindre */
     #chat-input {
-        height: 30px; /* Lägre höjd */
-        font-size: 13px; /* Mindre text */
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 5px;
-        margin-bottom: 0px; /* Ta bort marginal */
+        height: 20px; /* Lägre höjd */
+        font-size: 10px; /* Mindre text */
+        border: -20px solid #ddd;
+        border-radius: 0px;
+        padding: 0px;
+        margin-bottom: 100px; /* Ta bort marginal */
     }
 
     /* Sänd-knappen bredvid inputen */
@@ -113,6 +113,140 @@
     }
 
     </style>
+
+
+<style>
+    /* --- BASSTIL (Gäller både mobil och dator) --- */
+    body {
+        margin: 0;
+        padding: 15px;
+        font-family: sans-serif;
+        background-color: #006aa7;
+        background-image: url('flagga.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrerar allt innehåll */
+    }
+
+    /* Behållaren som håller allt (boxen i mitten) */
+    .container {
+        width: 100%;       /* Full bredd på mobilen */
+        max-width: 500px;  /* Men max 500px på datorn */
+        box-sizing: border-box;
+    }
+
+    /* Bokningskort och chattbox */
+    .booking-card, #chat-container {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        width: 100%;      /* Tar upp hela bredden av containern */
+        box-sizing: border-box;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    /* --- DATOR-ANPASSNING (Skärmar bredare än 768px) --- */
+    @media (min-width: 768px) {
+        body {
+            padding: 50px 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Om du vill ha chatten och bokningar sida vid sida på dator: */
+        /* Men för en enkel taxi-app är det oftast snyggast att ha dem centrerade i en kolumn */
+    }
+
+    /* --- MOBIL-ANPASSNING (Skärmar smalare än 480px) --- */
+    @media (max-width: 480px) {
+        body {
+            padding: 10px;
+        }
+        
+        .booking-card {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+    <style>
+    /* --- BASSTIL (Gäller både mobil och dator) --- */
+    body {
+        margin: 0;
+        padding: 15px;
+        font-family: sans-serif;
+        background-color: #006aa7;
+        background-image: url('flagga.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrerar allt innehåll */
+    }
+
+    /* Behållaren som håller allt (boxen i mitten) */
+    .container {
+        width: 100%;       /* Full bredd på mobilen */
+        max-width: 500px;  /* Men max 500px på datorn */
+        box-sizing: border-box;
+    }
+
+    /* Bokningskort och chattbox */
+    .booking-card, #chat-container {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        width: 100%;      /* Tar upp hela bredden av containern */
+        box-sizing: border-box;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    /* --- DATOR-ANPASSNING (Skärmar bredare än 768px) --- */
+    @media (min-width: 768px) {
+        body {
+            padding: 50px 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Om du vill ha chatten och bokningar sida vid sida på dator: */
+        /* Men för en enkel taxi-app är det oftast snyggast att ha dem centrerade i en kolumn */
+    }
+
+    /* --- MOBIL-ANPASSNING (Skärmar smalare än 480px) --- */
+    @media (max-width: 480px) {
+        body {
+            padding: 10px;
+        }
+        
+        .booking-card {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+
+
+
+
 </head>
 
 <body>
